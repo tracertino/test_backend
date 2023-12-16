@@ -1,28 +1,34 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
+from flask_sqlalchemy import SQLAlchemy
 
-Base = declarative_base()
+db = SQLAlchemy()
 
-class Support(Base):
+class Support(db.Model):
     __tablename__ = 'support'
-    id = Column(Integer, primary_key=True, unique=True, autoincrement="auto")
-    question = Column(String(500), nullable=False)
-    answer = Column(String(500), nullable=False)
+    id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement="auto")
+    question = db.Column(db.String(500), nullable=False)
+    answer = db.Column(db.String(500), nullable=False)
 
     @classmethod
-    def add_items_support(self, session, question, answer):
-        post=Support(question=question, answer=answer)
-        session.add(post)
-        session.commit()
+    def add_item(self, question, answer):
+        try:
+            post=Support(question=question, answer=answer)
+            db.session.add(post)
+            db.session.commit()
+            return {"message": "Данные добавлены"}, 200
+        except Exception:
+            return {"message": Exception.args[0]}, 404
 
     @classmethod
-    def get_items_support(cls, session):
-        response_json = []
-        items = session.query(cls).all()
-        for item in items:
-            response_json.append({"id": item.id,
-                                "question": item.question,
-                                "answer": item.answer})
-        session.close()
-        return response_json
+    def get_items(cls):
+        try:
+            response_json = []
+            items = db.session.query(cls).all()
+            for item in items:
+                response_json.append({"id": item.id,
+                                    "question": item.question,
+                                    "answer": item.answer})
+            return response_json, 200
+        except Exception:
+            return {"message": Exception.args[0]}, 404
+            
+        

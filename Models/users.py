@@ -1,15 +1,13 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
+from flask_sqlalchemy import SQLAlchemy
 
-Base = declarative_base()
+db = SQLAlchemy()
 
-class Users(Base):
+class Users(db.Model):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True, unique=True, autoincrement="auto")
+    id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement="auto")
     # email = Column(String(50), nullable=False)
-    user_name = Column(String(20), nullable=False)
-    family_name = Column(String(20), nullable=False)
+    user_name = db.Column(db.String(20), nullable=False)
+    family_name = db.Column(db.String(20), nullable=False)
     # last_name = Column(String(20), nullable=True)
     # password = Column(String(30), nullable=False)
     # birthday = Column(DateTime, nullable=False) 

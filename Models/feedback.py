@@ -1,27 +1,29 @@
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+from flask_sqlalchemy import SQLAlchemy
 
-Base = declarative_base()
+db = SQLAlchemy()
 
-class Feedback(Base):
+class Feedback(db.Model):
     __tablename__ = 'feedback'
-    id = Column(Integer, primary_key=True, unique=True, autoincrement="auto")
-    username = Column(String(20), nullable=False)
-    data = Column(String(500), nullable=False)
+    id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement="auto")
+    username = db.Column(db.String(20), nullable=False)
+    data = db.Column(db.String(500), nullable=False)
 
     @classmethod
-    def add_item(self, session, username, data):
-        res=Feedback(username=username, data=data)
-        session.add(res)
-        session.commit()
+    def add_item(self, username, data):
+        try:
+            res=Feedback(username=username, data=data)
+            db.session.add(res)
+            db.session.commit()
+            return {"message": "Данные добавлены"}, 200
+        except Exception:
+            return {"message": Exception.args[0]}, 404
 
     @classmethod
-    def get_items(cls, session):
+    def get_items(cls):
         response_json = []
-        items = session.query(cls).all()
+        items = db.session.query(cls).all()
         for item in items:
             response_json.append({"id": item.id,
                                 "username": item.username,
                                 "data": item.data})
-        session.close()
-        return response_json
+        return response_json, 200
