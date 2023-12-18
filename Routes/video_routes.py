@@ -1,6 +1,7 @@
 from flask import Blueprint
-from Models.videos import Category
+from Models.videos import Category, Subcategory
 from flask import jsonify, request
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, get_jwt
 
 bp_video = Blueprint('video', __name__)
 
@@ -19,6 +20,7 @@ def get_video():
     #     return jsonify({"message": "нет данных"}), 404
     
 @bp_video.route('/video/add', methods=["GET"])
+@jwt_required()
 def add_video():
     category = request.args.get("category")
     subcategory = request.args.get("subcategory")
@@ -57,4 +59,18 @@ def add_category():
 def delete_category():
     category = request.args.get("category")
     message, status = Category.delete_item(category)
+    return jsonify(message), status
+
+@bp_video.route('/video/subcategory/add', methods=["GET"])
+def add_subcategory():
+    category = request.args.get("category")
+    subcategory = request.args.get("subcategory")
+    message, status = Subcategory.add_item(category=category, subcategory=subcategory)
+    return jsonify(message), status
+
+@bp_video.route('/video/subcategory/get', methods=["GET"])
+def get_subcategories():
+    category = request.args.get("category")
+    # subcategory = request.args.get("subcategory")
+    message, status = Subcategory.get_items(category=category)
     return jsonify(message), status

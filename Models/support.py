@@ -1,6 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from extentions import db
 
 class Support(db.Model):
     __tablename__ = 'support'
@@ -15,8 +13,8 @@ class Support(db.Model):
             db.session.add(post)
             db.session.commit()
             return {"message": "Данные добавлены"}, 200
-        except Exception:
-            return {"message": Exception.args[0]}, 404
+        except Exception as e:
+            return {"message": e.args[0]}, 404
 
     @classmethod
     def get_items(cls):
@@ -28,7 +26,7 @@ class Support(db.Model):
                                     "question": item.question,
                                     "answer": item.answer})
             return response_json, 200
-        except Exception:
-            return {"message": Exception.args[0]}, 404
+        except Exception as e:
+            return {"message": e.args[0]}, 404
             
         
