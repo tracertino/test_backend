@@ -18,10 +18,12 @@ class Feedback(db.Model):
 
     @classmethod
     def get_items(cls):
-        response_json = []
+        
         items = db.session.query(cls).all()
-        for item in items:
-            response_json.append({"id": item.id,
-                                "username": item.username,
-                                "data": item.data})
-        return response_json, 200
+        # for item in items:
+        #     response_json.append({"id": item.id,
+        #                         "username": item.username,
+        #                         "data": item.data})
+        return [{"id": item.id,
+                 "username": item.username,
+                 "data": item.data} for item in items], 200
