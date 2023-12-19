@@ -15,4 +15,8 @@ def add_feedback():
     data = request.args.get("data")
     if username and data:
         message, status = Feedback.add_item(username=username, data=data)
-        return jsonify(message), status
+        if status == 200:
+            message, status = Feedback.get_items()
+            return jsonify(message), status
+        else:
+            return jsonify(message), status

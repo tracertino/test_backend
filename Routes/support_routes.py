@@ -13,7 +13,11 @@ def add_support():
     question = request.args.get("question")
     answer = request.args.get("answer")
     if question and answer:
-        message, status = Support.add_items_support(answer=answer, question=question)
-        return jsonify(message), status
+        message, status = Support.add_item(answer=answer, question=question)
+        if status == 200:
+            message, status = Support.get_items()
+            return jsonify(message), status
+        else:
+            return jsonify(message), status
     else:
         return jsonify({"message": "Не все поля заполнены"}), 404
