@@ -1,4 +1,4 @@
-from extentions import db
+from . import db
 
 class Feedback(db.Model):
     __tablename__ = 'feedback'

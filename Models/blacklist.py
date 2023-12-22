@@ -1,4 +1,4 @@
-from extentions import db
+from . import db
 
 # Модель для черного списка токенов
 class TokenBlacklist(db.Model):

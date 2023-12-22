@@ -1,7 +1,7 @@
 
 from sqlalchemy.exc import IntegrityError
 
-from extentions import db
+from . import db
 
 class Category(db.Model):
     __tablename__ = 'category'
@@ -12,7 +12,7 @@ class Category(db.Model):
     @classmethod
     def get_items(cls):        
         categories = db.session.query(cls).all()
-        return [{"category": category.name, "id": category.id} for category in categories], 200
+        return [{"title": category.name, "id": category.id} for category in categories], 200
 
     @classmethod
     def add_item(self, name):
@@ -86,17 +86,17 @@ class Subcategory(db.Model):
         category = Category.query.filter_by(name=category).one_or_none()
         if category:
             subcategories = category.subcategories
-            return [{"subcategory": subcategory.name} for subcategory in subcategories], 200
+            return [{"title": subcategory.name} for subcategory in subcategories], 200
         else:
             return {"message": "Ошибка"}, 500
 
 class Video(db.Model):
     __tablename__ = 'videos'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String)
-    description = db.Column(db.String)
-    URL = db.Column(db.String)
-    role = db.Column(db.String)
+    title = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=False)
+    URL = db.Column(db.String, nullable=False)
+    role = db.Column(db.String, nullable=False)
     subcategory_id = db.Column(db.Integer, db.ForeignKey('subcategory.id'), nullable=False)
     # subcategory = relationship('Subcategory', back_populates='videos')
 
@@ -114,13 +114,16 @@ class Video(db.Model):
         finally:
             db.session.close()
 
-    # @classmethod
-    # def get_items_support(cls, session):
-    #     response_json = []
-    #     items = session.query(cls).all()
-    #     for item in items:
-    #         response_json.append({"id": item.id,
-    #                             "question": item.question,
-    #                             "answer": item.answer})
-    #     session.close()
-    #     return response_json
+    @classmethod
+    def get_items(cls, subcategory):
+        get_subcategory = db.session.query(Subcategory).filter_by(name=subcategory).one_or_none()
+        print(get_subcategory)
+        if get_subcategory:
+            # result = db.session.query(cls).filter_by(subcategory=get_subcategory.id).all()
+            result = get_subcategory.videos
+            return [{"title": item.title,
+                     "description": item.description,
+                     "URL": item.URL,
+                     "role": item.role} for item in result], 200
+        else:
+            return {"message": "non video"}, 500

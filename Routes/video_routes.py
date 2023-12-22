@@ -5,10 +5,10 @@ from flask_jwt_extended import jwt_required
 
 bp_video = Blueprint('video', __name__)
 
-@bp_video.route('/video/get', methods=["GET"])
-def get_video():
-    question = request.args.get("question")
-    answer = request.args.get("answer")
+# @bp_video.route('/video/get', methods=["GET"])
+# def get_video():
+#     question = request.args.get("question")
+#     answer = request.args.get("answer")
     # if question and answer:
     #     Support.add_items_support(session=session, answer=answer, question=question)
         
@@ -30,6 +30,13 @@ def add_video():
     role = request.args.get("role")
     message, status = Video.add_item(subcategory=subcategory, title=title, description=description,
                                      URL=URL, role=role)
+    return jsonify(message), status
+
+@bp_video.route('/video/get', methods=["GET"])
+def get_videos():
+    # category = request.args.get("category")
+    subcategory = request.args.get("subcategory")
+    message, status = Video.get_items(subcategory)
     return jsonify(message), status
     
 @bp_video.route('/video/category/add', methods=["GET"])

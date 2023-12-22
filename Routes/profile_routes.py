@@ -2,6 +2,7 @@ from flask import request, jsonify, Blueprint
 from flask_jwt_extended import jwt_required, create_access_token
 from flask_jwt_extended import get_jwt_identity, get_jwt
 from Models.blacklist import TokenBlacklist
+from Models.users import Users
 # from Routes import jwt
 
 
@@ -25,7 +26,7 @@ def login():
     # Проверка учетных данных и генерация токена доступа
     if username == "admin" and password == "123456Q":
         access_token = create_access_token(identity=username)
-        # print(access_token)
+        print(access_token)
         return jsonify({"accessToken": access_token})
 
     return jsonify({"error": "Invalid credentials"}), 401
@@ -46,4 +47,4 @@ def profile():
     # token = TokenBlacklist(jti=jti)
     # # db.session.add(token)
     # # db.session.commit()
-    return 'Вы успешно вышли'
+    return 'ok'
