@@ -5,7 +5,7 @@ class Calculation(db.Model):
     id = db.Column(db.String(200), primary_key=True)
     # calc_id = db.Column(db.Integer,  db.ForeignKey(Users.id))
     fio = db.Column(db.String(200), nullable=False)
-    birthday = db.Column(db.DateTime, nullable=False)
+    # birthday = db.Column(db.DateTime, nullable=False)
     # calc = db.Column(db.String(200), nullable=True)
     # email = Column(String(50), nullable=False)
     # user_name = Column(String(20), nullable=False)
