@@ -28,5 +28,7 @@ class Support(db.Model):
             return response_json, 200
         except Exception as e:
             return {"message": e.args[0]}, 404
+        
+
             
         

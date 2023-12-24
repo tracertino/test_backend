@@ -2,14 +2,14 @@ from flask import request, jsonify, Blueprint
 from flask_jwt_extended import jwt_required, create_access_token
 from flask_jwt_extended import get_jwt_identity, get_jwt
 from Models.blacklist import TokenBlacklist
-from Models.users import Users
-# from Routes import jwt
+from Models.users import User
+from flask import g
 
-
-bp_profile = Blueprint('profile', __name__)
+bp_profile = Blueprint('profile_bp', __name__)
 
 @bp_profile.route("/profile/registration", methods=["POST"])
 def registration():
+    g.current_user
     username = request.json.get("username")
     password = request.json.get("password")
     print(f"{username=} {password=}")
@@ -43,8 +43,4 @@ def logout():
 @bp_profile.route('/profile', methods=['GET'])
 @jwt_required()
 def profile():
-    # jti = get_jwt()['jti']
-    # token = TokenBlacklist(jti=jti)
-    # # db.session.add(token)
-    # # db.session.commit()
-    return 'ok'
+    return {"message":'Вы успешно вошли'}, 200

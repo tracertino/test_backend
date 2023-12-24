@@ -3,7 +3,7 @@ from Models.videos import Category, Subcategory, Video
 from flask import jsonify, request
 from flask_jwt_extended import jwt_required
 
-bp_video = Blueprint('video', __name__)
+bp_video = Blueprint('video_bp', __name__)
 
 # @bp_video.route('/video/get', methods=["GET"])
 # def get_video():

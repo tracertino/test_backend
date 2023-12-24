@@ -1,7 +1,7 @@
 from flask import request, jsonify, Blueprint
 from Models.feedback import Feedback
 
-bp_feedback = Blueprint('feedback', __name__)
+bp_feedback = Blueprint('feedback_bp', __name__)
 
 @bp_feedback.route("/feedback/get", methods=["GET"])
 def get_feedback():

@@ -8,6 +8,9 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True)
     subcategories = db.relationship('Subcategory', backref='category', lazy=True)
+    
+    def __str__(self):
+        return self.name
 
     @classmethod
     def get_items(cls):        
@@ -52,6 +55,9 @@ class Subcategory(db.Model):
     videos = db.relationship('Video', backref='subcategory', lazy=True)
     # category = db.relationship('Category', back_populates='subcategories')
     # videos = relationship("Video", back_populates="subcategory")
+    
+    def __str__(self):
+        return self.name
 
     @classmethod
     def add_item(self, category, subcategory):

@@ -1,7 +1,7 @@
 from flask import request, jsonify, Blueprint
 from Models.support import Support
 
-bp_support = Blueprint('support', __name__)
+bp_support = Blueprint('support_bp', __name__)
 
 @bp_support.route("/support/get", methods=["GET"])
 def get_support():
