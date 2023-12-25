@@ -3,23 +3,26 @@ from Models import db
 from Models.support import Support
 from Models.users import User, Role
 from Models.videos import Category, Subcategory, Video
-from flask_jwt_extended import jwt_required
+from . import basic_auth
 
-from flask_admin import Admin
-admin = Admin()
+from flask_admin import Admin, expose
+admin = Admin(name='Admin', template_mode='bootstrap3', url="/admin")
+
 
 class UserView(ModelView):
     column_exclude_list = ('password', "token", )
+    @expose('/admin')
+    @basic_auth.required
+    def index(self):
+        return super(UserView, self).index_view()
     
 class CategoryView(ModelView):
-    
-    # @jwt_required()
-    # def is_accessible(self):
-    #     # Ваша логика проверки доступа (например, на основе ролей пользователя)
-    #     return True
-    
     column_list = ('name',)
     form_columns = ('name',)
+    @expose('/admin')
+    @basic_auth.required
+    def index(self):
+        return super(CategoryView, self).index_view()
 
 class SubcategoryView(ModelView):
     column_filters = ('category',)
@@ -27,12 +30,12 @@ class SubcategoryView(ModelView):
     form_columns = ('category', 'name',)
     
 class VideoViews(ModelView):
-    column_exlude_list = ("id", )
+    column_exclude_list = ("id", )
     
 class RoleViews(ModelView):
     column_list = ("name",)
     form_columns = ('name',)
-   
+    
 admin.add_view(RoleViews(Role, db.session))
 admin.add_view(UserView(User, db.session, name="Users profile", url="/admin/users"))
 admin.add_view(ModelView(Support, db.session, name="Support", url="/admin/support"))

@@ -2,7 +2,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_cors import CORS
 from Utils.middleware import jwt
-
+from Utils import basic_auth
 from Routes.profile_routes import bp_profile
 from Routes.feedback_routes import bp_feedback
 from Routes.support_routes import bp_support
@@ -19,13 +19,12 @@ app.secret_key = 'ваш_секретный_ключ_здесь'
 app.config["JWT_SECRET_KEY"] = "kniga_code"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['BASIC_AUTH_REALM'] = 'Login required'
 
 jwt.init_app(app)
 db.init_app(app)
+basic_auth.init_app(app)
 migrate = Migrate(app, db)
-
-# admin = Admin(app)
-
 
 table_name = {
     "alembic_version",
@@ -45,7 +44,9 @@ with app.app_context():
     table_names = set(inspector.get_table_names())
     if not table_name.issubset(table_names):
         db.create_all()
+    
     admin.init_app(app)
+   
         
 
 
