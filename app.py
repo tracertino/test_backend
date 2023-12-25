@@ -25,7 +25,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 # admin = Admin(app)
-admin.init_app(app)
+
 
 table_name = {
     "alembic_version",
@@ -45,6 +45,7 @@ with app.app_context():
     table_names = set(inspector.get_table_names())
     if not table_name.issubset(table_names):
         db.create_all()
+    admin.init_app(app)
         
 
 

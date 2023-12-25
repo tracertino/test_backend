@@ -7,7 +7,7 @@ class Category(db.Model):
     __tablename__ = 'category'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True)
-    subcategories = db.relationship('Subcategory', backref='category', lazy=True)
+    # subcategories = db.relationship('Subcategory', backref='category', lazy=True)
     
     def __str__(self):
         return self.name
@@ -53,6 +53,7 @@ class Subcategory(db.Model):
     name = db.Column(db.String)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     videos = db.relationship('Video', backref='subcategory', lazy=True)
+    category = db.relationship('Category', backref='subcategories')
     # category = db.relationship('Category', back_populates='subcategories')
     # videos = relationship("Video", back_populates="subcategory")
     

@@ -18,7 +18,7 @@ class CategoryView(ModelView):
     #     # Ваша логика проверки доступа (например, на основе ролей пользователя)
     #     return True
     
-    column_list = ('name')
+    column_list = ('name',)
     form_columns = ('name',)
 
 class SubcategoryView(ModelView):
