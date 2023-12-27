@@ -8,6 +8,8 @@ from Routes.feedback_routes import bp_feedback
 from Routes.support_routes import bp_support
 from Routes.video_routes import bp_video
 from Routes.calculation_routes import bp_calculation
+from Routes.consultation_routes import bp_consultation
+from Routes.study_routes import bp_study
 from Models import db
 from Utils.admin_panel import admin
 
@@ -36,7 +38,11 @@ table_name = {
     "token_blacklist",
     "user",
     "videos",
-    "role"
+    "role",
+    "level",
+    "consultation",
+    "study",
+    "page"
 }
 
 with app.app_context():
@@ -56,6 +62,8 @@ app.register_blueprint(bp_support)
 app.register_blueprint(bp_profile)
 app.register_blueprint(bp_video)
 app.register_blueprint(bp_calculation)
+app.register_blueprint(bp_consultation)
+app.register_blueprint(bp_study)
 CORS(app)
 
 if __name__ == "__main__":

@@ -1,9 +1,5 @@
 from . import db
 from werkzeug.security import generate_password_hash
-from flask_security import UserMixin, RoleMixin
-from flask_security import Security, SQLAlchemyUserDatastore
-
-
 
 class Role(db.Model):
     __tablename__ = 'role'

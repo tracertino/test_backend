@@ -3,11 +3,21 @@ from sqlalchemy.exc import IntegrityError
 
 from . import db
 
+class Page(db.Model):
+    __tablename__ = 'page'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), unique=True)
+    
+    def __str__(self):
+        return self.name
+
 class Category(db.Model):
     __tablename__ = 'category'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True)
-    # subcategories = db.relationship('Subcategory', backref='category', lazy=True)
+    page_id = db.Column(db.Integer, db.ForeignKey('page.id'), nullable=False)
+    pages = db.relationship("Page", backref='pages', lazy=True)
+
     
     def __str__(self):
         return self.name
@@ -64,7 +74,6 @@ class Subcategory(db.Model):
     def add_item(self, category, subcategory):
         try:
             get_category = db.session.query(Category).filter_by(name=category).first()
-            print(get_category)
             post=Subcategory(category=get_category, name=subcategory)
             db.session.add(post)
             db.session.commit()

@@ -9,7 +9,7 @@ bp_profile = Blueprint('profile_bp', __name__)
 
 @bp_profile.route("/profile/registration", methods=["POST"])
 def registration():
-    g.current_user
+    # g.current_user
     username = request.json.get("username")
     password = request.json.get("password")
     print(f"{username=} {password=}")
