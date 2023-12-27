@@ -16,7 +16,7 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True)
     page_id = db.Column(db.Integer, db.ForeignKey('page.id'), nullable=False)
-    pages = db.relationship("Page", backref='pages', lazy=True)
+    page = db.relationship("Page", backref='pages', lazy=True)
 
     
     def __str__(self):

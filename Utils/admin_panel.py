@@ -18,16 +18,18 @@ class UserView(ModelView):
         return super(UserView, self).index_view()
     
 class PageView(ModelView):
-    column_list = ('name', "page")
+    column_list = ('name',)
     form_columns = ('name',)
-    # @expose('/')
+    @expose('/')
+    def index(self):
+        return self.render('admin/index.html')
     # @basic_auth.required
     # def index(self):
     #     return super(PageView, self).index_view()
     
 class CategoryView(ModelView):
-    column_list = ('name',)
-    form_columns = ('name',)
+    column_list = ('name', "page")
+    form_columns = ('name', "page")
     # @expose('/')
     # @basic_auth.required
     # def index(self):
