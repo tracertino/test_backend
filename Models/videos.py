@@ -1,5 +1,5 @@
 
-from sqlalchemy.exc import IntegrityError
+from Models.users import Role
 
 from . import db
 
@@ -14,7 +14,7 @@ class Page(db.Model):
 class Category(db.Model):
     __tablename__ = 'category'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), unique=True)
+    name = db.Column(db.String(20), nullable=False, unique=False)
     page_id = db.Column(db.Integer, db.ForeignKey('page.id'), nullable=False)
     page = db.relationship("Page", backref='pages', lazy=True)
 
@@ -31,9 +31,6 @@ class Category(db.Model):
         else:
             return {"message": "Ошибка"}, 500
 
-        # categories = db.session.query(cls).all()
-        # return [{"title": category.name, "id": category.id} for category in categories], 200
-
 class Subcategory(db.Model):
     __tablename__ = 'subcategory'
     id = db.Column(db.Integer, primary_key=True)
@@ -41,8 +38,6 @@ class Subcategory(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     videos = db.relationship('Video', backref='subcategory', lazy=True)
     category = db.relationship('Category', backref='subcategories')
-    # category = db.relationship('Category', back_populates='subcategories')
-    # videos = relationship("Video", back_populates="subcategory")
     
     def __str__(self):
         return self.name
@@ -62,7 +57,8 @@ class Video(db.Model):
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
     URL = db.Column(db.String, nullable=False)
-    role = db.Column(db.String, nullable=False)
+    # role = db.relationship("Role", backref='rolies', lazy=True)
+    # role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
     subcategory_id = db.Column(db.Integer, db.ForeignKey('subcategory.id'), nullable=False)
 
     @classmethod
