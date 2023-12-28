@@ -20,15 +20,19 @@ class UserView(ModelView):
 class PageView(ModelView):
     column_list = ('name',)
     form_columns = ('name',)
-    @expose('/')
-    def index(self):
-        return self.render('admin/index.html')
+    # @expose('/')
+    # def index(self):
+    #     return self.render('admin/index.html')
     # @basic_auth.required
     # def index(self):
     #     return super(PageView, self).index_view()
     
 class CategoryView(ModelView):
-    column_list = ('name', "page")
+    column_labels = {
+        "page": "Страница",
+        "name": "Категория"
+    }
+    column_list = ('id','name', "page")
     form_columns = ('name', "page")
     # @expose('/')
     # @basic_auth.required
@@ -36,8 +40,13 @@ class CategoryView(ModelView):
     #     return super(CategoryView, self).index_view()
 
 class SubcategoryView(ModelView):
-    column_filters = ('category',)
-    column_list = ('name', 'category',)
+    column_labels = {
+        "category.page": "Страница",
+        "category": "Категория",
+        "name": "Подкатегория"
+    }
+    column_filters = ('category', "category.page")
+    column_list = ("id", "category.id", 'category.page', 'category', 'name',)
     form_columns = ('category', 'name',)
     
 class VideoViews(ModelView):

@@ -32,42 +32,20 @@ def add_video():
                                      URL=URL, role=role)
     return jsonify(message), status
 
-@bp_video.route('/video/get', methods=["GET"])
-def get_videos():
-    # category = request.args.get("category")
-    subcategory = request.args.get("subcategory")
-    message, status = Video.get_items(subcategory)
-    return jsonify(message), status
-    
-@bp_video.route('/video/category/add', methods=["GET"])
-def add_category():
-    category = request.args.get("category")
-    message, status = Category.add_item(category)
-    return jsonify(message), status    
-
-@bp_video.route('/video/category/get', methods=["GET"])
-def get_categories():
-    # category = request.args.get("category")
-    # subcategory = request.args.get("subcategory")
-    message, status = Category.get_items()
+#Получение видео
+@bp_video.route('/<page>/<subcategory>/video_get', methods=["GET"])
+def get_videos(page, subcategory):
+    message, status = Video.get_items(page, subcategory)
     return jsonify(message), status
 
-@bp_video.route('/video/category/del', methods=["GET"])
-def delete_category():
-    category = request.args.get("category")
-    message, status = Category.delete_item(category)
+#Получение категорий 
+@bp_video.route('/<page>/category/get', methods=["GET"])
+def get_categories(page):
+    message, status = Category.get_items(page)
     return jsonify(message), status
 
-@bp_video.route('/video/category/subcategory/add', methods=["GET"])
-def add_subcategory():
-    category = request.args.get("category")
-    subcategory = request.args.get("subcategory")
-    message, status = Subcategory.add_item(category=category, subcategory=subcategory)
-    return jsonify(message), status
-
-@bp_video.route('/video/category/subcategory/get', methods=["GET"])
-def get_subcategories():
-    category = request.args.get("category")
-    # subcategory = request.args.get("subcategory")
-    message, status = Subcategory.get_items(category=category)
+#Получение подкатегорий 
+@bp_video.route('/<page>/<category>/subcategory/get', methods=["GET"])
+def get_subcategories(page, category):
+    message, status = Subcategory.get_items(page, category)
     return jsonify(message), status
