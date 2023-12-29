@@ -12,3 +12,4 @@ def authenticate(username, password):
     return False
 
 basic_auth.check_credentials = authenticate
+

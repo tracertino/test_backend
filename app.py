@@ -12,6 +12,8 @@ from Routes.consultation_routes import bp_consultation
 from Routes.study_routes import bp_study
 from Models import db
 from Utils.admin_panel import admin
+from flask_jwt_extended import JWTManager
+
 
 
 
@@ -22,8 +24,9 @@ app.config["JWT_SECRET_KEY"] = "kniga_code"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['BASIC_AUTH_REALM'] = 'Login required'
+app.config['JWT_BLOCKLIST_ENABLED'] = True
 
-jwt.init_app(app)
+
 db.init_app(app)
 basic_auth.init_app(app)
 migrate = Migrate(app, db)
@@ -52,8 +55,31 @@ with app.app_context():
         db.create_all()
     
     admin.init_app(app)
-   
-        
+# from flask_jwt_extended import jwt_required
+# jwt = JWTManager(app)
+
+# @jwt.token_in_blocklist_loader
+# def check_if_token_in_blocklist(jwt_header, jwt_payload):
+#     # Проверяем, находится ли маркер в черном списке базы данных
+#     token = jwt_header + '.' + jwt_payload
+#     print(token)
+#     return 2
+
+# @app.route('/profile')
+# @jwt_required()
+# def protected():
+#     return 1
+
+# from Models.blacklist import TokenBlacklist
+# jwt = JWTManager(app)
+
+# @jwt.token_in_blocklist_loader
+# def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
+#     jti = jwt_payload["jti"]
+#     print(jti)
+#     token = TokenBlacklist.find_token(token=jti)
+    
+#     return token is not None        
 
 
     
@@ -67,5 +93,7 @@ app.register_blueprint(bp_study)
 CORS(app)
 
 if __name__ == "__main__":
+    
+    jwt.init_app(app)
     app.run(debug=True, host="0.0.0.0", port=80)
 

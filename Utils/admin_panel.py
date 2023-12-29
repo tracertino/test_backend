@@ -11,7 +11,8 @@ from flask_admin import Admin, expose
 admin = Admin(name='Admin', template_mode='bootstrap3', url="/admin")
 
 class UserView(ModelView):
-    column_exclude_list = ('password', "token", )
+    column_exclude_list = ('password', )
+    # form_column = ('name',)
     @expose('/')
     @basic_auth.required
     def index(self):

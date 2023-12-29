@@ -57,8 +57,8 @@ class Video(db.Model):
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
     URL = db.Column(db.String, nullable=False)
-    # role = db.relationship("Role", backref='rolies', lazy=True)
-    # role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
+    role = db.relationship("Role", backref='rolies', lazy=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
     subcategory_id = db.Column(db.Integer, db.ForeignKey('subcategory.id'), nullable=False)
 
     @classmethod

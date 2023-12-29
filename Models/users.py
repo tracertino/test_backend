@@ -1,6 +1,6 @@
 from . import db
-from werkzeug.security import generate_password_hash
-
+from sqlalchemy.exc import IntegrityError
+from werkzeug.security import check_password_hash
 class Role(db.Model):
     __tablename__ = 'role'
     id = db.Column(db.Integer, primary_key=True)
@@ -13,36 +13,50 @@ class Role(db.Model):
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    # email = Column(String(50), nullable=False)
-    user_name = db.Column(db.String(20), nullable=False)
-    family_name = db.Column(db.String(20), nullable=False)
-    last_name = db.Column(db.String(20), nullable=True)
-    password = db.Column(db.String(30), nullable=False)
-    birthday = db.Column(db.DateTime) 
+    email = db.Column(db.String(50), nullable=False, unique=True)
+    user_name = db.Column(db.String(20))
+    family_name = db.Column(db.String(20))
+    last_name = db.Column(db.String(20))
+    password = db.Column(db.String, nullable=False)
+    birthday = db.Column(db.DateTime)
+    phone =  db.Column(db.Integer, unique=True)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
-    token =  db.Column(db.String(200)) 
+    token =  db.Column(db.String) 
     # calculation = relationship("Calculation")
-    
-    
-# class Role(db.Model, RoleMixin):
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(80), unique=True)
-    
-#     def __str__(self) -> str:
-#         return self.name
 
-# class User(db.Model, UserMixin):
-#     id = db.Column(db.Integer, primary_key=True)
-#     email = db.Column(db.String(255), unique=True)
-#     password = db.Column(db.String(255))
-#     active = db.Column(db.Boolean())
-#     roles = db.relationship('Role', secondary='user_roles')
+    @classmethod
+    def add_user(cls, email, password, token):
+        try:
+            post = cls(email=email, password=password, token=token, role_id = 1)
+            db.session.add(post) 
+            db.session.commit() 
+            return {"message": "Пользователь зарегистрирован", "accessToken": token}, 200 
+        except IntegrityError:
+            return {"message": "Такой email уже существует в БД."}, 409
 
-# # Создание таблицы для связи пользователей и ролей
-# class UserRoles(db.Model):
-#     id = db.Column(db.Integer(), primary_key=True)
-#     user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
-#     role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
-
-# user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-# security = Security(user_datastore)
+    @classmethod
+    def user_is_auth(cls, email, password ):
+        user = cls.query.filter_by(email=email).one_or_none()
+        if user:
+            if check_password_hash(user.password, password):
+                return {"accessToken": user.token, 
+                        "roles": f"{user.role}"}, 200
+            else:
+                return {"message": "Неверный пароль"}, 401
+        else:
+            return {"message": "Неверный логин"}, 402
+    
+    @classmethod
+    def get_profile(cls, email):
+        user = cls.query.filter_by(email=email).one_or_none()
+        if user:
+            return {"role": f"{user.role}",
+                    "username": user.user_name,
+                    "lastname": user.last_name,
+                    "familyname": user.family_name,
+                    "birthday": user.birthday,
+                    "phone": user.phone,
+                    "email": user.email}, 200
+        else:
+            return {"message": "Пользователь не найден"}, 404
+ 
