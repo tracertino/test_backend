@@ -27,7 +27,7 @@ class User(db.Model):
     @classmethod
     def add_user(cls, email, password, token):
         try:
-            post = cls(email=email, password=password, token=token, role_id = 1)
+            post = cls(email=email, password=password, role_id = 1)
             db.session.add(post) 
             db.session.commit() 
             return {"message": "Пользователь зарегистрирован", "accessToken": token}, 200 
@@ -39,8 +39,7 @@ class User(db.Model):
         user = cls.query.filter_by(email=email).one_or_none()
         if user:
             if check_password_hash(user.password, password):
-                return {"accessToken": user.token, 
-                        "roles": f"{user.role}"}, 200
+                return {"roles": f"{user.role}"}, 200
             else:
                 return {"message": "Неверный пароль"}, 401
         else:
@@ -57,6 +56,25 @@ class User(db.Model):
                     "birthday": user.birthday,
                     "phone": user.phone,
                     "email": user.email}, 200
+        else:
+            return {"message": "Пользователь не найден"}, 404
+    
+    @classmethod
+    def update_profile(cls, email, data):
+        user = cls.query.filter_by(email=email).one_or_none()
+        if user:
+            if "username" in data:
+                user.user_name = data["username"]
+            if "lastname" in data:
+                user.last_name = data["lastname"]
+            if "familyname" in data:
+                user.family_name = data["familyname"]
+            if "birthday" in data:
+                user.birthday = data["birthday"]
+            if "phone" in data:
+                user.phone = data["phone"]
+            db.session.commit()
+            return {"message": "Данные обновлены"}, 200
         else:
             return {"message": "Пользователь не найден"}, 404
  

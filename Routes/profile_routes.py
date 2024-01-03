@@ -31,7 +31,7 @@ def login():
     if status == 200:
         access_token = create_access_token(identity=username)
         message["accessToken"] = access_token
-        return jsonify(message), status
+    return jsonify(message), status
 
 # Маршрут для добавления токена в черный список
 @bp_profile.route('/profile/logout', methods=['GET'])
@@ -41,11 +41,13 @@ def logout():
     TokenBlacklist.add_token(token=jti)
     return {"message":'Вы успешно вышли'}, 200
 
-# @bp_profile.route('/profile/get', methods=['GET'])
-# def get_user():
-#     jti = get_jwt()['jti']
-#     TokenBlacklist.add_token(token=jti)
-#     return {"message":'Вы успешно вышли'}, 200
+@bp_profile.route('/profile/update', methods=['PUT'])
+@jwt_required()
+def update_user():
+    data = request.get_json()
+    email = get_jwt_identity()
+    message, status = User.update_profile(email=email, data=data)
+    return jsonify(message), status
 
 @bp_profile.route('/profile', methods=['GET'])
 @jwt_required()
