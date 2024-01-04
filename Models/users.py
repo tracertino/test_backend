@@ -18,7 +18,7 @@ class User(db.Model):
     family_name = db.Column(db.String(20))
     last_name = db.Column(db.String(20))
     password = db.Column(db.String, nullable=False)
-    birthday = db.Column(db.DateTime)
+    birthday = db.Column(db.Date)
     phone =  db.Column(db.Integer, unique=True)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
     token =  db.Column(db.String) 

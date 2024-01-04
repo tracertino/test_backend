@@ -2,12 +2,12 @@ from flask_admin.contrib.sqla import ModelView
 from Models import db
 from Models.support import Support
 from Models.users import User, Role
-from Models.videos import Category, Subcategory, Video, Page
+from Models.videos import Category, Subcategory, PageVideo, Page, PageStars, PageBook
 from Models.consultation import Consultation
 from Models.study import Study
 from Models.babyNames import BabyNames
 from Models.babyLastnames import BabyLastnames
-from Admin_panel import basic_auth
+from AdminPanel import basic_auth
 from flask_admin import Admin, expose
 # from Admin_panel.video_view import VideoCategoryView, SubcategoryView
 
@@ -28,19 +28,6 @@ class PageView(ModelView):
     # @basic_auth.required
     # def index(self):
     #     return super(PageView, self).index_view()
-    
-    
-# from wtforms import StringField
-# from wtforms.validators import DataRequired
-# from flask_admin import form    
-# class CustomCategoryForm(form.BaseForm):
-#     page = StringField('Page', validators=[DataRequired()], render_kw={'readonly': 'readonly'})
-#     name = StringField('Name', validators=[DataRequired()])
-    
-#     def __init__(self, *args, **kwargs):
-#         super(CustomCategoryForm, self).__init__(*args, **kwargs)
-#         self.page.data = Page.query.filter_by(name = "video").first()
-
     
 class CategoryView(ModelView):
     column_labels = {
@@ -89,6 +76,12 @@ class SubcategoryView(ModelView):
 class VideoViews(ModelView):
     column_exclude_list = ("id", )
     
+class StarsViews(ModelView):
+    column_exclude_list = ("id", )
+    
+class BooksViews(ModelView):
+    column_exclude_list = ("id", )
+    
 class RoleViews(ModelView):
     column_list = ("name",)
     form_columns = ('name',)
@@ -117,6 +110,8 @@ admin.add_view(ModelView(Support, db.session, name="Support", url="/admin/suppor
 admin.add_view(PageView(Page, db.session, category="Video"))
 admin.add_view(CategoryView(Category, db.session, category="Video"))
 admin.add_view(SubcategoryView(Subcategory, db.session, category="Video"))
-admin.add_view(VideoViews(Video, db.session, name="Page Video", category="Video"))
+admin.add_view(VideoViews(PageVideo, db.session, name="Page Video", category="Video"))
+admin.add_view(StarsViews(PageStars, db.session, name="Page Stars", category="Video"))
+admin.add_view(BooksViews(PageBook, db.session, name="Page Book", category="Video"))
 admin.add_view(ConsultationView(Consultation, db.session))
 admin.add_view(StudyView(Study, db.session))

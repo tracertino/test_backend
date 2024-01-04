@@ -36,7 +36,7 @@ class Subcategory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
-    videos = db.relationship('Video', backref='subcategory', lazy=True)
+    videos = db.relationship('PageVideo', backref='subcategory', lazy=True)
     category = db.relationship('Category', backref='subcategories')
     
     def __str__(self):
@@ -51,7 +51,7 @@ class Subcategory(db.Model):
         else:
             return {"message": "Ошибка"}, 500
 
-class Video(db.Model):
+class PageVideo(db.Model):
     __tablename__ = 'videos'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
@@ -71,6 +71,56 @@ class Video(db.Model):
             return [{"title": item.title,
                      "description": item.description,
                      "URL": item.URL,
-                     "role": item.role} for item in result], 200
+                     "role": f"{item.role}"} for item in result], 200
+        else:
+            return {"message": "Ошибка"}, 500
+        
+class PageStars(db.Model):
+    __tablename__ = 'stars'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    familyname = db.Column(db.String)
+    lastname = db.Column(db.String)
+    birthday = db.Column(db.Date)
+    description = db.Column(db.String)
+    calculation = db.Column(db.JSON)
+    subcategory_id = db.Column(db.Integer, db.ForeignKey('subcategory.id'), nullable=False)
+    subcategory = db.relationship("Subcategory", backref='stars_subcategory', lazy=True)
+
+    @classmethod
+    def get_items(cls, _page, _subcategory ):
+        page = Page.query.filter_by(name=_page).one_or_none()
+        subcategory = Subcategory.query.filter_by(name=_subcategory).one_or_none()
+
+        if page and subcategory:
+            result = cls.query.join(Subcategory).join(Category).filter(Category.page == page, Subcategory.name == _subcategory).all()
+            return [{"name": item.name,
+                     "lastname": item.lastname,
+                     "familyname": item.familyname,
+                     "birthday": item.birthday,
+                     "description": item.description,
+                     "calculation": item.calculation} for item in result], 200
+        else:
+            return {"message": "Ошибка"}, 500
+        
+class PageBook(db.Model):
+    __tablename__ = 'books'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    description = db.Column(db.String)
+    image_paths = db.Column(db.String)
+    subcategory_id = db.Column(db.Integer, db.ForeignKey('subcategory.id'), nullable=False)
+    subcategory = db.relationship("Subcategory", backref='book_subcategory', lazy=True)
+
+    @classmethod
+    def get_items(cls, _page, _subcategory ):
+        page = Page.query.filter_by(name=_page).one_or_none()
+        subcategory = Subcategory.query.filter_by(name=_subcategory).one_or_none()
+
+        if page and subcategory:
+            result = cls.query.join(Subcategory).join(Category).filter(Category.page == page, Subcategory.name == _subcategory).all()
+            return [{"title": item.title,
+                     "description": item.description,
+                     "imagePaths": item.image_paths} for item in result], 200
         else:
             return {"message": "Ошибка"}, 500

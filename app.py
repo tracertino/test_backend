@@ -2,7 +2,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_cors import CORS
 from Utils.middleware import jwt
-from Admin_panel import basic_auth
+from AdminPanel import basic_auth
 from Routes.profile_routes import bp_profile
 from Routes.feedback_routes import bp_feedback
 from Routes.support_routes import bp_support
@@ -11,7 +11,7 @@ from Routes.calculation_routes import bp_calculation
 from Routes.consultation_routes import bp_consultation
 from Routes.study_routes import bp_study
 from Models import db
-from Admin_panel.view import admin
+from AdminPanel.view import admin
 from datetime import timedelta
 
 
@@ -45,7 +45,9 @@ table_name = {
     "page",
     "gender",
     "babyNames",
-    "babyLastnames"
+    "babyLastnames",
+    "stars",
+    "books"
 }
 
 with app.app_context():
@@ -60,7 +62,20 @@ with app.app_context():
         db.create_all()
     
     admin.init_app(app)
-    # admin.add_view(VideoCategoryView(model=Category, session=db.session, category_name= "book", category="Video"))
+    
+allowed_ips = ["127.0.0.1", "192.168.1.1", "46.180.209.249"]  # Замените этот список разрешенных IP-адресов на свой
+
+class IPFilterMiddleware:
+    def __init__(self, app):
+        self.app = app
+
+    def __call__(self, environ, start_response):
+        if environ['REMOTE_ADDR'] not in allowed_ips:
+            start_response('403 Forbidden', [('Content-Type', 'text/plain')])
+            return [b'fuck you']
+        return self.app(environ, start_response)
+
+app.wsgi_app = IPFilterMiddleware(app.wsgi_app)
    
 app.register_blueprint(bp_feedback)
 app.register_blueprint(bp_support)

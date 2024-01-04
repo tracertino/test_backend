@@ -14,7 +14,7 @@ def registration():
     # g.current_user
     username = request.json.get("email")
     password = request.json.get("password")
-    password_hash = generate_password_hash(password)
+    password_hash = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
     if username=="admin":
         return "False", 409
     access_token = create_access_token(identity=username)
@@ -25,7 +25,7 @@ def registration():
 def login():
     username = request.json.get("email")
     password = request.json.get("password")
-
+    print(username, password)
     # Проверка учетных данных и генерация токена доступа
     message, status  = User.user_is_auth(username, password)
     if status == 200:

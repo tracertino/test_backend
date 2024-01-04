@@ -8,7 +8,6 @@ bp_calculation = Blueprint('calculation_bp', __name__)
 
 @bp_calculation.route("/calculation/selection", methods=["POST"])
 def selection_name():
-    print(request.json)
     gender = request.json.get("gender")
     mission = int(request.json.get('mission'))
     familyname = request.json.get('familyname')
