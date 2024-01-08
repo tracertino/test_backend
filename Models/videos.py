@@ -124,3 +124,25 @@ class PageBook(db.Model):
                      "imagePaths": item.image_paths} for item in result], 200
         else:
             return {"message": "Ошибка"}, 500
+
+class PageStudyVideo(db.Model):
+    __tablename__ = 'studyVideo'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    description = db.Column(db.String)
+    link = db.Column(db.String)
+    subcategory_id = db.Column(db.Integer, db.ForeignKey('subcategory.id'), nullable=False)
+    subcategory = db.relationship("Subcategory", backref='studyVideo_subcategory', lazy=True)
+
+    @classmethod
+    def get_items(cls, _page, _subcategory ):
+        page = Page.query.filter_by(name=_page).one_or_none()
+        subcategory = Subcategory.query.filter_by(name=_subcategory).one_or_none()
+
+        if page and subcategory:
+            result = cls.query.join(Subcategory).join(Category).filter(Category.page == page, Subcategory.name == _subcategory).all()
+            return [{"title": item.title,
+                     "description": item.description,
+                     "link": item.link} for item in result], 200
+        else:
+            return {"message": "Ошибка"}, 500

@@ -47,7 +47,8 @@ table_name = {
     "babyNames",
     "babyLastnames",
     "stars",
-    "books"
+    "books",
+    "studyVideo"
 }
 
 with app.app_context():
@@ -61,7 +62,9 @@ with app.app_context():
         print(table_name.difference(table_names))
         db.create_all()
     
+    jwt.init_app(app)
     admin.init_app(app)
+    
     
 allowed_ips = ["127.0.0.1", "192.168.1.1", "46.180.209.249"]  # Замените этот список разрешенных IP-адресов на свой
 

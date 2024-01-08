@@ -17,8 +17,9 @@ def registration():
     password_hash = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
     if username=="admin":
         return "False", 409
-    access_token = create_access_token(identity=username)
-    message, status = User.add_user(username, password_hash, access_token)
+    message, status = User.add_user(username, password_hash)
+    access_token = create_access_token(identity=username, additional_claims={"role": message.get("role")})
+    message["accessToken"] = access_token
     return jsonify(message), status
 
 @bp_profile.route("/profile/auth", methods=["POST"])
@@ -29,7 +30,7 @@ def login():
     # Проверка учетных данных и генерация токена доступа
     message, status  = User.user_is_auth(username, password)
     if status == 200:
-        access_token = create_access_token(identity=username)
+        access_token = create_access_token(identity=username, additional_claims={"role": message.get("role")})
         message["accessToken"] = access_token
     return jsonify(message), status
 

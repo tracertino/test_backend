@@ -25,12 +25,12 @@ class User(db.Model):
     # calculation = relationship("Calculation")
 
     @classmethod
-    def add_user(cls, email, password, token):
+    def add_user(cls, email, password):
         try:
-            post = cls(email=email, password=password, role_id = 1)
-            db.session.add(post) 
+            user = cls(email=email, password=password, role_id = 1)
+            db.session.add(user) 
             db.session.commit() 
-            return {"message": "Пользователь зарегистрирован", "accessToken": token}, 200 
+            return {"message": "Пользователь зарегистрирован", "role": f"{user.role}"}, 200 
         except IntegrityError:
             return {"message": "Такой email уже существует в БД."}, 409
 
@@ -39,7 +39,7 @@ class User(db.Model):
         user = cls.query.filter_by(email=email).one_or_none()
         if user:
             if check_password_hash(user.password, password):
-                return {"roles": f"{user.role}"}, 200
+                return {"role": f"{user.role}"}, 200
             else:
                 return {"message": "Неверный пароль"}, 401
         else:

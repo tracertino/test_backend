@@ -1,12 +1,21 @@
 from flask import request, jsonify, Blueprint
-from Models.calculation import Calculation
 from Models.babyNames import BabyNames
 from Models.babyLastnames import BabyLastnames
 from Utils.raschet_tlk_sovmestimost import raschet_tlk_fio
+from flask_jwt_extended import jwt_required, get_jwt
 
 bp_calculation = Blueprint('calculation_bp', __name__)
 
+@bp_calculation.route("/calculation", methods=["GET"])
+@jwt_required()
+def page_calculation():
+    role = get_jwt()['role']
+    return jsonify({"role": role}), 200
+
+
+#Подбор имени или отчества
 @bp_calculation.route("/calculation/selection", methods=["POST"])
+@jwt_required()
 def selection_name():
     gender = request.json.get("gender")
     mission = int(request.json.get('mission'))
