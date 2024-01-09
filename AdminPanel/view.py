@@ -81,7 +81,22 @@ class StarsViews(ModelView):
     
 class BooksViews(ModelView):
     column_exclude_list = ("id", )
+    from wtforms import fields, TextAreaField
+    # form_overrides = {
+    #     'image_paths': TextAreaField()
+    # }
     
+    # form_args = {
+    #     'image_paths': {
+    #         'widget': TextAreaField(),
+    #         'description': 'Введите значения через запятую',
+    #         'separator': ',',
+    #         'allow_blank': True
+    #     }
+    # }
+    form_widget_args = {"image_paths": {"rows":10}}
+
+
 class RoleViews(ModelView):
     column_list = ("name",)
     form_columns = ('name',)

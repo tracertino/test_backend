@@ -5,7 +5,6 @@ from Models.blacklist import TokenBlacklist
 from Models.users import User
 from werkzeug.security import generate_password_hash
 from flask import g
-# from app import jwt
 
 bp_profile = Blueprint('profile_bp', __name__)
 
@@ -26,7 +25,6 @@ def registration():
 def login():
     username = request.json.get("email")
     password = request.json.get("password")
-    print(username, password)
     # Проверка учетных данных и генерация токена доступа
     message, status  = User.user_is_auth(username, password)
     if status == 200:
@@ -56,3 +54,9 @@ def profile():
     email = get_jwt_identity()
     message, status = User.get_profile(email)
     return jsonify(message), status
+
+@bp_profile.route("/role", methods=["GET"])
+@jwt_required()
+def get_role():
+    role = get_jwt()['role']
+    return jsonify({"role": role}), 200

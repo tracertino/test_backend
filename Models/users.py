@@ -1,6 +1,7 @@
 from . import db
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash
+from datetime import datetime
 class Role(db.Model):
     __tablename__ = 'role'
     id = db.Column(db.Integer, primary_key=True)
@@ -53,7 +54,7 @@ class User(db.Model):
                     "username": user.user_name,
                     "lastname": user.last_name,
                     "familyname": user.family_name,
-                    "birthday": user.birthday,
+                    "birthday": user.birthday.strftime('%Y-%m-%d'),
                     "phone": user.phone,
                     "email": user.email}, 200
         else:
@@ -70,7 +71,7 @@ class User(db.Model):
             if "familyname" in data:
                 user.family_name = data["familyname"]
             if "birthday" in data:
-                user.birthday = data["birthday"]
+                user.birthday = datetime.strptime(data["birthday"],'%Y-%m-%d') 
             if "phone" in data:
                 user.phone = data["phone"]
             db.session.commit()

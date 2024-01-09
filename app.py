@@ -24,7 +24,6 @@ app.config['BASIC_AUTH_REALM'] = 'Login required'
 app.config['JWT_BLOCKLIST_ENABLED'] = True
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
 
-db.init_app(app)
 basic_auth.init_app(app)
 migrate = Migrate(app, db)
 
@@ -65,20 +64,19 @@ with app.app_context():
     jwt.init_app(app)
     admin.init_app(app)
     
-    
-allowed_ips = ["127.0.0.1", "192.168.1.1", "46.180.209.249"]  # Замените этот список разрешенных IP-адресов на свой
+# allowed_ips = ["127.0.0.1", "192.168.1.1", "46.180.209.249"]  # Замените этот список разрешенных IP-адресов на свой
 
-class IPFilterMiddleware:
-    def __init__(self, app):
-        self.app = app
+# class IPFilterMiddleware:
+#     def __init__(self, app):
+#         self.app = app
 
-    def __call__(self, environ, start_response):
-        if environ['REMOTE_ADDR'] not in allowed_ips:
-            start_response('403 Forbidden', [('Content-Type', 'text/plain')])
-            return [b'fuck you']
-        return self.app(environ, start_response)
+#     def __call__(self, environ, start_response):
+#         if environ['REMOTE_ADDR'] not in allowed_ips:
+#             start_response('403 Forbidden', [('Content-Type', 'text/plain')])
+#             return [b'fuck you']
+#         return self.app(environ, start_response)
 
-app.wsgi_app = IPFilterMiddleware(app.wsgi_app)
+# app.wsgi_app = IPFilterMiddleware(app.wsgi_app)
    
 app.register_blueprint(bp_feedback)
 app.register_blueprint(bp_support)
