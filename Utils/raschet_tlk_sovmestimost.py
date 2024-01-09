@@ -125,9 +125,9 @@ def raschet(fio, date_rogd):
     if antitelo <= 0:
         antitelo = antitelo + 9
 
-    telo = antitelo * 2
-    while telo > 9:
-        telo = sum_array(telo)
+    telo_talant = antitelo * 2
+    while telo_talant > 9:
+        telo_talant = sum_array(telo_talant)
 
     if sut%2 != 0:
         rutina = (sut+9)//2
@@ -192,35 +192,91 @@ def raschet(fio, date_rogd):
     grezi = antigrezi * 2
     while grezi > 9:
         grezi = sum_array(grezi)
+  #New calc      
+    argument_n = vibor_energiya * 2
+    while argument_n > 9:
+        argument_n = sum_array(argument_n)
+        
+    if vibor_poterya % 2 == 0:
+        stremlenie_n = vibor_poterya // 2
+    else:
+        stremlenie_n = (vibor_poterya + 9) // 2 
+    
+    nevihod_n = vibor_poterya * 2
+    while nevihod_n > 9:
+        nevihod_n = sum_array(nevihod_n)
+        
+    komfort_n = sut + nevihod_n
+    while komfort_n > 9:
+        komfort_n = sum_array(komfort_n)
+        
+    nepodarok_n = komfort_n * 2
+    while nepodarok_n > 9:
+        nepodarok_n = sum_array(nepodarok_n)
+        
+    zapas_n = nepodarok_n - sut
+    if zapas_n <= 0:
+        zapas_n += 9    
+    
+    if vibor_energiya % 2 == 0:
+        nevrag_n = vibor_energiya // 2
+    else:
+        nevrag_n = (vibor_energiya + 9) // 2
+        
+    kozir_n = sut + nevrag_n
+    while kozir_n > 9:
+        kozir_n = sum_array(kozir_n)
+        
+    if kozir_n%2 == 0:    
+        oshibka_n = kozir_n // 2
+    else:
+        oshibka_n = (kozir_n + 9) // 2
+        
+    predatel_n = oshibka_n - sut
+    if predatel_n <= 0:
+        predatel_n += 9
+        
+    uchitel = missiya * 2
+    while uchitel > 9:
+        uchitel = sum_array(uchitel)
+    
+    if resurs%2 == 0:
+        muchitel = resurs // 2
+    else:
+        muchitel = (resurs + 9) // 2
+        
+    nuzhda = telo_talant * 2
+    while nuzhda > 9:
+        nuzhda = sum_array(nuzhda)
 
-    result_json = {"fiasko": fiasko,
-                    "missiya": missiya,
-                    "vibor_palach": vibor_palach,
-                    "sut": sut, 
-                    "vibor_zadacha": vibor_zadacha, 
-                    "stremlenie": stremlenie,
-                    "argument": argument,
-                    "antioblik": antioblik,
-                    "oblik": oblik,
-                    "resurs": resurs,
-                    "bremya": bremya,
-                    "vibor_energiya": vibor_energiya, 
-                    "vibor_poterya": vibor_poterya,
-                    "antitelo": antitelo,
-                    "telo": telo,
-                    "rutina": rutina,
-                    "smisl": smisl, 
-                    "nevihod": nevihod,
-                    "komfort": komfort,
-                    "nepodarok": nepodarok,
-                    "zapas": zapas,
-                    "nevrag": nevrag,
-                    "kozir": kozir,
-                    "oshibka": oshibka,
-                    "predatel": predatel,
-                    "fars": fars,
-                    "antiyadro": antiyadro,
-                    "yadro": yadro,
-                    "antigrezi": antigrezi,
-                    "grezi": grezi}
+    result_json = [{"name": "fiasko",           "name_rus":"Фиаско",            "value": fiasko},
+                    {"name": "missiya",         "name_rus":"Миссия",            "value": missiya},
+                    {"name": "vibor_palach",    "name_rus":"Выбор (Палач)",     "value": vibor_palach},
+                    {"name": "sut",             "name_rus":"Суть",              "value": sut}, 
+                    {"name": "vibor_zadacha",   "name_rus":"Выбор (Задача)",    "value": vibor_zadacha}, 
+                    {"name": "stremlenie",      "name_rus":"Стремление",        "value": stremlenie},
+                    {"name": "argument",        "name_rus":"Аргумент",          "value": argument},
+                    {"name": "antioblik",       "name_rus":"АнтиОблик",         "value": antioblik},
+                    {"name": "oblik",           "name_rus":"Облик",             "value": oblik},
+                    {"name": "resurs",          "name_rus":"Ресурс",            "value": resurs},
+                    {"name": "bremya",          "name_rus":"Бремя",             "value": bremya},
+                    {"name": "vibor_energiya",  "name_rus":"Выбор (Энергия)",   "value": vibor_energiya}, 
+                    {"name": "vibor_poterya",   "name_rus":"Выбор (Потеря)",    "value": vibor_poterya},
+                    {"name": "antitelo",        "name_rus":"АнтиТело",          "value": antitelo},
+                    {"name": "telo_talant",     "name_rus":"Тело (Талант)",     "value": telo_talant},
+                    {"name": "rutina",          "name_rus":"Рутина",            "value": rutina},
+                    {"name": "smisl",           "name_rus":"Смысл",             "value": smisl}, 
+                    {"name": "nevihod",         "name_rus":"НеВыход",           "value": nevihod},
+                    {"name": "komfort",         "name_rus":"Комфорт",           "value": komfort},
+                    {"name": "nepodarok",       "name_rus":"НеПодарок",         "value": nepodarok},
+                    {"name": "zapas",           "name_rus":"Запас",             "value": zapas},
+                    {"name": "nevrag",          "name_rus":"НеВраг",            "value": nevrag},
+                    {"name": "kozir",           "name_rus":"Козырь",            "value": kozir},
+                    {"name": "oshibka",         "name_rus":"Ошибка",            "value": oshibka},
+                    {"name": "predatel",        "name_rus":"Предатель",         "value": predatel},
+                    {"name": "fars",            "name_rus":"Фарс",              "value": fars},
+                    {"name": "antiyadro",       "name_rus":"АнтиЯдро",          "value": antiyadro},
+                    {"name": "yadro",           "name_rus":"Ядро",              "value": yadro},
+                    {"name": "antigrezi",       "name_rus":"Антигрезы",         "value": antigrezi},
+                    {"name": "fiasko",          "name_rus":"Грезы",             "value": grezi}]
     return result_json

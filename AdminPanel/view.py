@@ -80,8 +80,25 @@ class StarsViews(ModelView):
     column_exclude_list = ("id", )
     
 class BooksViews(ModelView):
+    from wtforms.widgets import TextArea
+    from wtforms.fields import TextAreaField
     column_exclude_list = ("id", )
-    from wtforms import fields, TextAreaField
+    column_list = ('id', 'title', 'description', 'image_paths')
+    # form_overrides = {
+    #         'image_paths': TextAreaField  # Используем TextArea вместо стандартного поля
+    #     }
+
+    # form_args = {
+    #     'image_paths': {
+    #         'widget': TextArea()  # Используем виджет TextArea
+    #     }
+    # }
+
+    # def on_model_change(self, form, model, is_created):
+    #     # Преобразование строки с разделенными запятыми в список при сохранении модели
+    #     if form.image_paths.data:
+    #         model.image_paths = form.image_paths.data.split(',')
+
     # form_overrides = {
     #     'image_paths': TextAreaField()
     # }
